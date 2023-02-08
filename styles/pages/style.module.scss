@@ -1,0 +1,21 @@
+.picture {
+    background-image: url("/images/bg-login.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    position: relative;
+}
+.overlay {
+    background-color: #5e50a1ad;
+    height: 100vh;
+    width: 100%;
+}
+.content {
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+}
