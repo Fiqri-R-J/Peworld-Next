@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { setCookie } from "cookies-next";
 import style from "../../styles/pages/style.module.scss";
 
-export default function login2() {
+export default function login() {
   const router = useRouter();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");

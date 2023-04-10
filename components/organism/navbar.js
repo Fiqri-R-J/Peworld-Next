@@ -16,6 +16,33 @@ export default function navbar() {
             </div>
             <BiBell className="me-5" style={{ color: "#9B9B9B" }} />
             <RxEnvelopeClosed style={{ color: "#9B9B9B" }} />
+            <div className="nav-item dropdown">
+              <img
+                src="../../images/2.jpg"
+                width="40px"
+                height="40px"
+                style={{
+                  objectFit: "cover",
+                  borderRadius: " 50%",
+                }}
+                alt="profile"
+                className="ms-5 d-block nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+              />
+              <ul className="dropdown-menu">
+                <li>
+                  <Link className="dropdown-item" href="/profile">
+                    Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" href="/logout">
+                    logout
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </nav>
       </header>

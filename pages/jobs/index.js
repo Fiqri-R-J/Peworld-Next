@@ -5,11 +5,36 @@ import style from "../../styles/pages/style.module.scss";
 import Head from "next/head";
 import Navbar from "../../components/organism/navbar";
 import Footer from "../../components/organism/footer";
+import CardJob from "../../components/molecules/CardJob";
 import { getCookie } from "cookies-next";
 import Link from "next/link";
 
 function Index(props) {
   const { jobList } = props;
+  const [data, setData] = React.useState(jobList.data.rows);
+  const [keyword, setKeyword] = React.useState("");
+  const [sort, setSort] = React.useState(["id", "DESC"]);
+  console.log(sort);
+  const search = () => {
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/user/list?limit=10&page=1&keyword=${keyword}`
+      )
+      .then((res) => {
+        setData(res.data.data.rows);
+      })
+      .catch((err) => console.log(err));
+  };
+  React.useEffect(() => {
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/user/list?limit=10&page=1&order=${sort[1]}&sortBy=${sort[0]}`
+      )
+      .then((res) => {
+        setData(res.data.data.rows);
+      })
+      .catch((err) => console.log(err));
+  }, [sort]);
 
   return (
     <>
@@ -41,6 +66,7 @@ function Index(props) {
                   type="text"
                   className="form-control"
                   aria-label="Text input with segmented dropdown button"
+                  onChange={(event) => setKeyword(event.target.value)}
                 />
                 <button
                   type="button"
@@ -52,70 +78,34 @@ function Index(props) {
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>
-                    <a className="dropdown-item" href="#">
-                      Sortir Berdasarkan Nama
-                    </a>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => setSort(["id", "ASC"])}
+                    >
+                      Sortir Berdasarkan Terlama
+                    </button>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
-                      Sortir Berdasarkan Skill
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Sortir Berdasarkan Lokasi
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Sortir Berdasarkan Freelance
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Sortir Berdasarkan Fulltime
-                    </a>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => setSort(["id", "DESC"])}
+                    >
+                      Sortir Berdasarkan Terbaru
+                    </button>
                   </li>
                 </ul>
                 <button
                   type="button"
                   className="btn btn-primary"
                   style={{ backgroundColor: "#5E50A1" }}
+                  onClick={search}
                 >
                   Search
                 </button>
               </div>
             </div>
             <div className="job mt-5">
-              <div className="row">
-                <div className="col-3 mb-3">
-                  <Link href="/jobs/detail/slug">
-                    <div className="card">
-                      <div className="card-body">
-                        <img
-                          src="../../images/2.jpg"
-                          alt="profile"
-                          width="30%"
-                        />
-                        <h5 style={{ color: "#1F2A36" }}>Lorem Ipsum</h5>
-                        <p style={{ fontSize: "small", color: "#9EA0A5" }}>
-                          Web Developer
-                        </p>
-                        <p style={{ fontSize: "small", color: "#9EA0A5" }}>
-                          Lorem Ipsum
-                        </p>
-                        <span className="badge text-bg-warning me-1">PHP</span>{" "}
-                        <span className="badge text-bg-warning me-1">
-                          Javascript
-                        </span>{" "}
-                        <span style={{ fontSize: "small", color: "#9EA0A5" }}>
-                          8+
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-              </div>
+              <CardJob data={data} />
               <nav aria-label="Page navigation example">
                 <ul className="pagination justify-content-center">
                   <li className="page-item">
@@ -157,8 +147,9 @@ function Index(props) {
 
 export async function getServerSideProps({ req, res }) {
   const jobList = await axios.get(
-    `${process.env.NEXT_PUBLIC_WEBSITE}/api/job-list`
+    `${process.env.NEXT_PUBLIC_API_URL}/v1/user/list?limit=10&page=1`
   );
+  console.log(jobList.data);
   const convertData = jobList.data;
 
   const token = getCookie("token", { req, res });
